@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Classroom Chaos</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fdfdfd; text-align: center; padding: 0; margin: 0; }
+    h1 { background-color: #00336600; color: white; padding: 1rem; margin: 0; }
+    .question {margin: 1.8rem auto 1rem; height: 120px;
+      background-color: #148af1aa;
+      color: #f9fafa;
+      font-size: 2.5rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center; }
+    .board {display: grid;grid-template-columns: repeat(2, 1fr);gap: 1rem;justify-items: center;margin: 1rem;}
+    .card {
+      width: 500px;
+      height: 50px;
+      background-color: #484848;
+      color: #484848;
+      border-radius: 10px;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      transition: 0.3s;
+    }
+    .card.revealed {
+      background-color: #2ecc71;
+      color: white;
+    }
+    .controls { margin-top: 2rem; }
+    .strike-display { font-size: 2.5rem; color: red; margin: 1rem; }
+    #timerDisplay {
+      font-size: 2rem;
+      width: 200px;
+      height: 60px;
+      background-color: #2a2929c5;
+      color: #abd0db;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    button {
+      font-size: 1rem;
+      background-color: #084d81;
+      color: white;
+      padding: 0.7rem 1.2rem;
+      margin: 0.5rem;
+      cursor: pointer;
+    }
+  </style>
+    <style>
+  body {
+    background-image: url('gbackground.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #080000;
+  }
+</style>
+</head>
+<body>
+  <h1></h1>
+  <h1></h1>
+  <h1></h1>
+  <div class="question" id="question">Question appears here...</div>
+  <div class="board" id="answers"></div>
+
+  <div id="timerDisplay">Timer: 8</div>
+
+  <div class="controls">
+    <div class="strike-display" id="strikes"></div>
+    <button onclick="startCountdown()">Start Timer</button>
+    <button onclick="addStrike()">Strike</button>
+    <button onclick="resetStrikes()">Reset Strikes</button>
+    <button onclick="nextRound()">Next Round</button>
+  </div>
+
+  <audio id="correctSound" src="correct.mp3"></audio>
+  <audio id="wrongSound" src="wrong.mp3"></audio>
+  <audio id="timerSound" src="heartbeat.mp3"></audio>
+  <script>
+    const questions = [
+      {
+        q: "Round 1: Name one of China’s top natural resources.",
+        a: ["Coal - 30","Rare Earth Elements - 25", "Iron Ore - 15", "Petroleum & Natural Gas - 10", "Gold - 10", "Timber - 5", "Hydropower - 5"]
+      },
+      {
+        q: "Round 2: What are key geographical features of Japan that affect its resources?",
+        a: ["Mountains - 30", "Volcanic Islands - 25", "Coastlines - 20", "Forests - 15", "Earthquake/Hot spring zones - 10"]
+      },
+      {
+        q: "ROund 3: Which East Asian countries are rich in underground mineral resources?",
+        a: ["China - 30", "Mongolia - 25", "North Korea - 20", "South Korea - 10", "Taiwan - 5"]
+      },
+      {
+        q: "Round 4: Name a type of climate found in East Asia that influences natural resources.",
+        a: ["Arid/Desert - 25", "Subtropical - 25", "Temperate - 20", "Continental - 15", "Tropical - 15"]
+      },
+      {
+        q: "Round 5: Which renewable resources are utilized or have potential in East Asia?",
+        a: ["Hydropower - 30", "Geothermal Energy - 25", "Solar Energy - 20", "Wind Energy - 15", "Biomass - 10"]
+      },
+      {
+        q: "Final Round: Which East Asian regions have the least natural resources?",
+        a: ["Macao - 40", "Hong Kong - 30", "Japan - 20", "South Korea - 10"]
+      }
+    ];
+
+    let currentRound = 0;
+    let strikes = 0;
+    let countdown;
+
+    function loadRound() {
+      const qData = questions[currentRound];
+      document.getElementById("question").textContent = qData.q;
+      const board = document.getElementById("answers");
+      board.innerHTML = "";
+      qData.a.forEach(answer => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.textContent = answer;
+        card.onclick = () => {
+          card.classList.add("revealed");
+          document.getElementById("correctSound").play();
+        };
+        board.appendChild(card);
+      });
+      resetStrikes();
+      document.getElementById("timerDisplay").textContent = "Timer: 8";
+      clearInterval(countdown);
+    }
+
+    function addStrike() {
+      if (strikes < 3) {
+        strikes++;
+        document.getElementById("strikes").textContent += "❌";
+        document.getElementById("wrongSound").play();
+      }
+    }
+
+    function resetStrikes() {
+      strikes = 0;
+      document.getElementById("strikes").textContent = "";
+    }
+
+    function nextRound() {
+      currentRound = (currentRound + 1) % questions.length;
+      loadRound();
+    }
+
+    function startCountdown() {
+      let timeLeft = 8;
+      document.getElementById('timerDisplay').textContent = "Timer: " + timeLeft;
+      clearInterval(countdown);document.getElementById("timerSound").play();
+      countdown = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timerDisplay').textContent = "Timer: " + timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(countdown);
+          document.getElementById('timerDisplay').textContent = "⏰ Time's up!";
+          document.getElementById("wrongSound").play();
+          addStrike();
+        }
+      }, 1000);
+    }
+
+    window.onload = loadRound;
+  </script>
+</body>
+</html>
