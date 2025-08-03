@@ -142,8 +142,7 @@
     function addStrike() {
       if (strikes < 3) {
         strikes++;
-        document.getElementById("strikes").textContent += "❌";
-        document.getElementById("wrongSound").play();
+        document.getElementById("strikes").textContent += "❌";document.getElementById("wrongSound").play();
       }
     }
 
@@ -166,8 +165,7 @@
         document.getElementById('timerDisplay').textContent = "Timer: " + timeLeft;
         if (timeLeft <= 0) {
           clearInterval(countdown);
-          document.getElementById('timerDisplay').textContent = "⏰ Time's up!";
-          document.getElementById("wrongSound").play();
+          document.getElementById('timerDisplay').textContent = "⏰ Time's up!";document.getElementById("wrongSound").play();
           addStrike();
         }
       }, 1000);
