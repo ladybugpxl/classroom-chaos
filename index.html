@@ -17,22 +17,18 @@
       justify-content: center; }
     .board {display: grid;grid-template-columns: repeat(2, 1fr);gap: 1rem;justify-items: center;margin: 1rem;}
     .card {
-      width: 100%;
-      aspect-ratio: 5 / 1.5;
+      width: 90%;
+      max-width: 300px;
       background-color: #484848;
       color: #484848;
-      border-radius: 40px;
+      border-radius: 10px;
       font-size: 1.4rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      text-align: center;
       cursor: pointer;
       user-select: none;
       transition: 0.3s;
-      padding: 0 1rem;
-      box-sizing: border-box;
-}
     }
     .card.revealed {
       background-color: #2ecc71;
